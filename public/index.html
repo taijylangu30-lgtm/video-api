@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PIXVERSE STUDIO - AI Video Generator</title>
+  <title>MAGIC HOUR STUDIO - AI Video Generator</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
   <div class="background-glow"></div>
   <div class="container">
     <header>
-      <h1>PIXVERSE STUDIO</h1>
+      <h1>MAGIC HOUR STUDIO</h1>
       <p class="subtitle">AI VIDEO GENERATOR</p>
     </header>
 
@@ -21,7 +21,6 @@
       <button class="tab-btn" id="tab-image-btn" onclick="switchTab('image')">IMAGE TO VIDEO</button>
     </div>
 
-    <!-- TEXT TO VIDEO FORM -->
     <form id="text-form" class="studio-card">
       <div class="form-group">
         <label for="text-prompt">Prompt</label>
@@ -33,7 +32,6 @@
           <label for="text-duration">Durée (s)</label>
           <select id="text-duration">
             <option value="5">5 Secondes</option>
-            <option value="8">8 Secondes</option>
           </select>
         </div>
         <div class="form-group">
@@ -49,7 +47,6 @@
       <button type="submit" class="submit-btn" id="text-submit-btn">Générer la vidéo</button>
     </form>
 
-    <!-- IMAGE TO VIDEO FORM -->
     <form id="image-form" class="studio-card hidden">
       <div class="form-group">
         <label>Image Source</label>
@@ -77,7 +74,6 @@
           <label for="image-duration">Durée (s)</label>
           <select id="image-duration">
             <option value="5">5 Secondes</option>
-            <option value="8">8 Secondes</option>
           </select>
         </div>
         <div class="form-group">
@@ -93,7 +89,6 @@
       <button type="submit" class="submit-btn" id="image-submit-btn">Animer l'image</button>
     </form>
 
-    <!-- STATUS DISPLAY -->
     <div id="status-card" class="studio-card hidden">
       <div class="status-header">
         <span class="status-badge" id="status-badge">Création...</span>
@@ -114,4 +109,4 @@
 
   <script src="app.js"></script>
 </body>
-        </html>
+</html>
