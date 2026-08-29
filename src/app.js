@@ -7,6 +7,9 @@ const errorHandler = require('./middleware/errorHandler');
 
 const app = express();
 
+// 💡 AJOUTER CETTE LIGNE ICI : Indique à Express qu'il est derrière un proxy (Render)
+app.set('trust proxy', 1);
+
 app.use(helmet({
   contentSecurityPolicy: false
 }));
