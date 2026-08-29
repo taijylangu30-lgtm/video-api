@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIXVERSE STUDIO - AI Video Generator</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="background-glow"></div>
+  <div class="container">
+    <header>
+      <h1>PIXVERSE STUDIO</h1>
+      <p class="subtitle">AI VIDEO GENERATOR</p>
+    </header>
+
+    <div class="tab-container">
+      <button class="tab-btn active" id="tab-text-btn" onclick="switchTab('text')">TEXT TO VIDEO</button>
+      <button class="tab-btn" id="tab-image-btn" onclick="switchTab('image')">IMAGE TO VIDEO</button>
+    </div>
+
+    <!-- TEXT TO VIDEO FORM -->
+    <form id="text-form" class="studio-card">
+      <div class="form-group">
+        <label for="text-prompt">Prompt</label>
+        <textarea id="text-prompt" rows="3" placeholder="A cinematic ninja walking through a futuristic city at night..." required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="text-duration">Durée (s)</label>
+          <select id="text-duration">
+            <option value="5">5 Secondes</option>
+            <option value="8">8 Secondes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="text-aspect">Format</label>
+          <select id="text-aspect">
+            <option value="16:9">16:9 (Paysage)</option>
+            <option value="9:16">9:16 (Portrait)</option>
+            <option value="1:1">1:1 (Carré)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="text-submit-btn">Générer la vidéo</button>
+    </form>
+
+    <!-- IMAGE TO VIDEO FORM -->
+    <form id="image-form" class="studio-card hidden">
+      <div class="form-group">
+        <label>Image Source</label>
+        <div class="drop-zone" id="drop-zone">
+          <input type="file" id="image-file" accept="image/jpeg,image/png,image/webp" hidden>
+          <div class="drop-zone-content" id="drop-zone-prompt">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <p>Glissez-déposez votre image ici ou <span>parcourez</span></p>
+            <span class="file-hint">PNG, JPG, WEBP • Max 10 Mo</span>
+          </div>
+          <div class="preview-container hidden" id="preview-container">
+            <img id="image-preview" src="" alt="Preview">
+            <button type="button" class="remove-btn" onclick="removeImage()">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="image-prompt">Prompt d'animation</label>
+        <textarea id="image-prompt" rows="3" placeholder="Animate the character naturally, add subtle camera movement..." required></textarea>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="image-duration">Durée (s)</label>
+          <select id="image-duration">
+            <option value="5">5 Secondes</option>
+            <option value="8">8 Secondes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="image-aspect">Format</label>
+          <select id="image-aspect">
+            <option value="16:9">16:9 (Paysage)</option>
+            <option value="9:16">9:16 (Portrait)</option>
+            <option value="1:1">1:1 (Carré)</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="image-submit-btn">Animer l'image</button>
+    </form>
+
+    <!-- STATUS DISPLAY -->
+    <div id="status-card" class="studio-card hidden">
+      <div class="status-header">
+        <span class="status-badge" id="status-badge">Création...</span>
+        <span class="task-id" id="task-id-display">ID: -</span>
+      </div>
+      
+      <div class="progress-bar-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <p id="status-message" class="status-text">Initialisation de la requête...</p>
+
+      <div id="result-container" class="hidden">
+        <video id="video-player" controls loop autoplay muted></video>
+        <a id="download-btn" target="_blank" class="download-link">Ouvrir / Télécharger la vidéo</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+        </html>
