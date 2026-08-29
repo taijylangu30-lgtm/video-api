@@ -1,25 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const rateLimit = require('express-rate-limit');
+const multer = require('multer');
+const path = require('path');
 const videoController = require('../controllers/video.controller');
-const upload = require('../middleware/upload');
 
-const generateLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20,
-  standardHeaders: true,
-  legacyHeaders: false,
-  message: {
-    success: false,
-    error: {
-      code: 'TOO_MANY_REQUESTS',
-      message: 'Trop de demandes de génération. Réessayez dans 15 minutes.'
-    }
+// Configuration du stockage temporaire pour Multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
   }
 });
 
-router.post('/text', generateLimiter, videoController.textToVideo);
-router.post('/image', generateLimiter, upload.single('image'), videoController.imageToVideo);
-router.get('/status/:taskId', videoController.getStatus);
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 } // Limite 10 Mo
+});
+
+// 💡 Vérifiez bien que videoController contient les méthodes correspondantes
+router.post('/text', videoController.generateTextToVideo);
+router.post('/image', upload.single('image'), videoController.generateImageToVideo);
+router.get('/status/:taskId', videoController.getTaskStatus);
 
 module.exports = router;
