@@ -1,82 +1,83 @@
-const pixverseService = require('../services/pixverse.service');
-const { deleteFile, formatError } = require('../utils/helpers');
+const magicHourService = require('../services/magicHour.service');
+const fs = require('fs');
 
-exports.textToVideo = async (req, res) => {
+exports.generateTextToVideo = async (req, res, next) => {
   try {
     const { prompt, duration, aspect_ratio } = req.body;
 
-    if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
-      return res.status(400).json(formatError('INVALID_PROMPT', 'Le champ "prompt" est obligatoire.'));
+    if (!prompt) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'INVALID_INPUT', message: 'Le prompt est requis.' }
+      });
     }
 
-    const taskId = await pixverseService.generateTextToVideo(
-      prompt.trim(),
-      duration || 5,
-      aspect_ratio || '16:9'
-    );
+    const taskId = await magicHourService.generateTextToVideo(prompt, duration, aspect_ratio);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       task_id: taskId,
       status: 'processing'
     });
   } catch (error) {
-    return res.status(500).json(formatError('PIXVERSE_ERROR', error.message));
+    next(error);
   }
 };
 
-exports.imageToVideo = async (req, res) => {
-  const file = req.file;
+exports.generateImageToVideo = async (req, res, next) => {
+  let filePath = null;
   try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        error: { code: 'INVALID_INPUT', message: 'Une image est requise.' }
+      });
+    }
+
+    filePath = req.file.path;
     const { prompt, duration, aspect_ratio } = req.body;
 
-    if (!file) {
-      return res.status(400).json(formatError('MISSING_IMAGE', 'Aucune image n\'a été fournie.'));
+    const taskId = await magicHourService.generateImageToVideo(filePath, prompt, duration, aspect_ratio);
+
+    // Supprimer le fichier temporaire local
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
 
-    if (!prompt || typeof prompt !== 'string' || prompt.trim() === '') {
-      deleteFile(file.path);
-      return res.status(400).json(formatError('INVALID_PROMPT', 'Le champ "prompt" est obligatoire.'));
-    }
-
-    const taskId = await pixverseService.generateImageToVideo(
-      file.path,
-      prompt.trim(),
-      duration || 5,
-      aspect_ratio || '16:9'
-    );
-
-    deleteFile(file.path);
-
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
       task_id: taskId,
       status: 'processing'
     });
   } catch (error) {
-    if (file) deleteFile(file.path);
-    return res.status(500).json(formatError('PIXVERSE_ERROR', error.message));
+    if (filePath && fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+    next(error);
   }
 };
 
-exports.getStatus = async (req, res) => {
+exports.getTaskStatus = async (req, res, next) => {
   try {
     const { taskId } = req.params;
 
     if (!taskId) {
-      return res.status(400).json(formatError('INVALID_TASK_ID', 'L\'identifiant de tâche est requis.'));
+      return res.status(400).json({
+        success: false,
+        error: { code: 'INVALID_INPUT', message: 'taskId est requis.' }
+      });
     }
 
-    const taskData = await pixverseService.getTaskStatus(taskId);
+    const statusResult = await magicHourService.getTaskStatus(taskId);
 
-    return res.status(200).json({
+    res.status(200).json({
       success: true,
-      task_id: taskData.taskId,
-      status: taskData.status,
-      progress: taskData.progress,
-      video_url: taskData.videoUrl
+      task_id: statusResult.taskId,
+      status: statusResult.status,
+      progress: statusResult.progress,
+      video_url: statusResult.videoUrl
     });
   } catch (error) {
-    return res.status(500).json(formatError('PIXVERSE_ERROR', error.message));
+    next(error);
   }
 };
