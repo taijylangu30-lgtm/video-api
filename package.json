@@ -1,13 +1,13 @@
 {
-  "name": "pixverse-video-api",
+  "name": "magichour-video-api",
   "version": "1.0.0",
-  "description": "API REST professionnelle d'interconnexion PixVerse pour Web & GoatBot V2",
+  "description": "API REST professionnelle d'interconnexion Magic Hour pour Web & GoatBot V2",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "node --watch src/server.js"
   },
-  "keywords": ["pixverse", "ai", "video", "api", "goatbot", "express"],
+  "keywords": ["magichour", "ai", "video", "api", "goatbot", "express"],
   "author": "Shade",
   "license": "MIT",
   "dependencies": {
